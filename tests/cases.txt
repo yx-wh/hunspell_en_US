@@ -1,0 +1,54 @@
+# Word-form lookup test cases for en_US
+#
+# Format:  <query><TAB><expected stems, space separated>
+# Lines starting with '#' and blank lines are ignored.
+# Stems may be returned in any order; extra stems are a regression.
+#
+# Run from the repository root:
+#
+#   fail=0
+#   while IFS=$'\t' read -r word expected; do
+#     case "$word" in ''|\#*) continue ;; esac
+#     got=$(hunspell -d ./en_US -s <<< "$word" | tr '\n' ' ')
+#     for stem in $expected; do
+#       case " $got " in *" $stem "*) ;; *) echo "MISS $word -> $stem (got: $got)"; fail=1 ;; esac
+#     done
+#   done < tests/cases.txt
+#   exit $fail
+
+# Wrong suffix flags on the base word: hoped must not resolve to hop.
+hoped	hope
+hopped	hop
+hoping	hope
+hopping	hop
+
+# Stem links added after removing stale flags.
+barred	bar
+barring	bar
+cubbed	cub
+cubbing	cub
+gapped	gap
+gapping	gap
+snipped	snip
+snipping	snip
+
+# halved/halving used to point at the noun "half".
+halved	halve
+halving	halve
+
+# sky/R used to produce skier; the agent noun belongs to ski.
+skier	ski
+
+# Derivation labels added in stage 1.
+national	nation
+hopeful	hope
+hopeless	hope
+personality	person
+
+# -able forms: only "googlable" was reachable through the affix rules.
+googleable	google
+googlable	google
+
+# ODE merge: compressed chains must still resolve to the base verb.
+reconstructiveness	reconstruct
+reconstructible	reconstruct
