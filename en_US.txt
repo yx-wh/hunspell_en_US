@@ -1,0 +1,158 @@
+* 2009-05-04: More stems were added for the GoldenDict project. Those are
+  useless for spellchecking, there is no point in adopting those changes
+  for spellcheckers.
+
+
+OpenOffice.org Hunspell en_US dictionary
+2007-08-29 release
+--
+This dictionary is based on a subset of the original
+English wordlist created by Kevin Atkinson for Pspell 
+and  Aspell and thus is covered by his original 
+LGPL license.  The affix file is a heavily modified
+version of the original english.aff file which was
+released as part of Geoff Kuenning's Ispell and as 
+such is covered by his BSD license.
+
+Thanks to both authors for there wonderful work.
+
+ChangeLog
+
+2007-08-29 nemeth AT OOo
+
+Mozilla 376296 - add "axe" (variant of ax)
+Mozilla 386259 - add "JavaScript"
+Mozilla 383694 - add "foci" and "octopi" (plurals of focus and octopus)
+Issue 73024 - add "gauge"
+Issue 75710 - add "foldable"
+Issue 75772 - add "GHz"
+Mozilla 379527 and Issue 62294 - add "dialogue"
+Issue 64246 - add "acknowledgement" as a variant of "acknowledgment"
+
+- TRY extended with apostrophe and dash for
+ dont -> don't
+ alltime -> all-time suggestions
+- new REP suggestions:
+- REP alot a_lot (alot ->  a lot)
+for suggestion)
+- REP nt n't (dont -> don't)
+- REP avengence -> a_vengeance (avengence -> a vengeance)
+- REP ninties 1990s
+- REP tion ssion: readmition -> readmission
+
+- add Mozilla words (blog, cafe, inline, online, eBay, PayPal, etc.)
+- add cybercafé
+- alias compression (saving 15 kB disk space + 0.8 MB memory)
+
+Mozilla 355178 - add scot-free
+Mozilla 374411 - add Scotty
+Mozilla 359305 - add archaeology, archeological, archeologist
+Mozilla 358754 - add doughnut
+Mozilla 254814 - add gauging, canoeing, *canoing, proactively
+Issue 71718 - remove *opthalmic, *opthalmology; *opthalmologic -> ophthalmologic
+Issue 68550 - *estoppal -> estoppel
+Issue 69345 - add tapenade
+Issue 67975 - add assistive
+Issue 63541 - remove *dessicate
+Issue 62599 - add toolbar
+
+2006-02-07 nemeth AT OOo
+
+Issue 48060 - add ordinal numbers with COMPOUNDRULE (1st, 11th, 101st etc.)
+Issue 29112, 55498 - add NOSUGGEST flags to taboo words
+Issue 56755 - add sequitor (non sequitor)
+Issue 50616 - add open source words (GNOME, KDE, OOo, OpenOffice.org)
+Issue 56389 - add Mozilla words (Mozilla, Firefox, Thunderbird)
+Issue 29110 - add okay
+Issue 58468 - add advisors
+Issue 58708 - add hiragana & katakana
+Issue 60240 - add arginine, histidine, monovalent, polymorphism, pyroelectric, pyroelectricity
+
+2005-11-01 dnaber AT OOo
+
+Issue 25797 - add proven, advisor, etc.
+
+2026 morphology cleanup (GoldenDict-ng)
+--
+The D/G/R/T affixes in this file do not double a final consonant, so a base
+carrying them generated a wrong surface form that collided with another lemma
+(hop/D -> hoped, while "hoped st:hope" is the correct link).  All such tags were
+removed from the base; the doubled forms stay explicit (hopped st:hop).
+
+* 212 base words lost 438 wrong D/G/R/T (and one Z) tags.
+* bar(red/ring), cub(bed/bing), gap(ped/ping), snip(ped/ping) got the missing
+  st: links; halved/halving now point at halve instead of half.
+* sky lost R/Z, ski gained R.
+* Derivational tags were added to 2001 words, only where the derived form is
+  already a headword (nation/a -> national, hope/f -> hopeful, ...).
+* New suffixes in en_US.aff: f -ful, l -less, o -ous, i -ish.
+* The new -ic flag is "Q", NOT "c": "ONLYINCOMPOUND c" already reserves lower
+  case c, which silently removed academy/acid/artist from the dictionary.
+* Added "googleable st:google" (google/B only generated "googlable").
+
+See REPORT.md and CHANGES.tsv for details.
+
+2026 ODE merge (GoldenDict-ng)
+--
+The Oxford Dictionary of English headword list (ODE.csv, 160 984 entries) was
+merged into this dictionary.  Derived words are not listed when a chain of at
+most two suffixes derives them from a base that is itself an ODE word of at
+least four letters (Hunspell's two-affix limit); the flag goes on the base.
+
+* 16 941 ODE words were compressed away, e.g.
+    reconstruct/V  covers reconstructive, reconstructively, reconstructiveness
+    reconstruct/j  covers reconstruction, reconstructional, reconstructionary,
+                           reconstructionist
+    reconstruct/B/k/v cover reconstructable / reconstructible / reconstructor
+* 104 229 new headwords were added (including 3 508 hyphen parts such as
+  "headedness" needed by compounds like "hard-headedness").
+* All 159 744 addable ODE words are accepted by hunspell; 0 regressions against
+  the previous dictionary.
+* New affixes: j -ion, k -ible, v -or, e -ist, r -ism, z -ize, x -ise,
+  s -ship, b -hood, d -dom, w -ward, y -ify, g -ate, h -ary, O non-, W anti-.
+* WORDCHARS now contains '-' and '.', so hyphenated entries and abbreviations
+  such as "a.m." are matched as single words.
+* Compression only uses suffixes; prefixed ODE words (reconstruct, nonabrasive,
+  ...) stay headwords so that they can be the base of their own derivatives.
+
+See ODE_compression.tsv for the full compressed list and REPORT.md for details.
+
+2026-09-28 st: link expansion (GoldenDict-ng)
+--
+Goal: add explicit `st:` (stem) links so GoldenDict's hunspell morphological
+analysis resolves inflected forms back to their base/lemma.  Verified that the
+existing "duplicate line" pattern (e.g. `mice/M` and `mice/M st:mouse` on two
+lines) is intentional and useful: it yields both the word itself and the true
+lemma as stem candidates, the safest behaviour for morphology lookups.
+
+* Parsed the Oxford Dictionary of English (ODE) entry list for inflected forms
+  and expanded `st:` coverage to every ODE-known inflection, adding the
+  `form` + `form st:base` duplicate entry for each (so both the surface form
+  and the lemma are reachable).
+* Initial expansion added 492 new `st:` lines.
+* Cleaned miscaptures where ODE cross-references / related terms were wrongly
+  treated as inflections (the base word is unrelated to the form):
+  - 20 "noise-base" cluster lines (euphemism -> dagnab-type garbage).
+  - flash -> flash-freeze (wrong direction: flash is not an inflection of
+    flash-freeze; the link must point from an inflection to its base).
+  - 6 compound-reversed miscaptures (rage -> rage-quit, hand -> hand-knit,
+    religious -> non-religious, plain -> plain-saw, Navajo -> Na-Dene,
+    pre -> pre-make).  Also removed a second one of this kind,
+    psychological -> non-religious.
+  - 86 low-overlap miscaptures (a common word linked to an unrelated obscure
+    base, e.g. food -> roast, time -> recapture, especially -> moisturize,
+    water -> void).  Kept the single legitimate low-overlap item
+    aurar -> eyrir (Icelandic plural of eyrir).
+  - Systematic final pass: removed 104 semantically-unrelated pairs plus 3 stem
+    "false friends" (BIOS -> bio, bustier -> busty, Canaries -> canary),
+    while preserving 30 legitimate irregular / foreign / compound plurals
+    (bear -> borne, tear -> torn, shear -> shorn, swell -> swollen,
+    swear -> sworn, thrive -> throve, shrive -> shrove, reeve -> rove,
+    craftspeople -> craftsperson, tradespeople -> tradesperson,
+    menservants -> manservant, messieurs -> monsieur,
+    patresfamilias -> paterfamilias, maloti -> loti, lisente -> sente,
+    emalangeni -> lilangeni, aurar -> eyrir, etc.).
+* Result: 272 net-new legitimate `st:` links; dictionary now 176551 lines.
+* Backups kept: en_US.dic.bak_stexp (before expansion) and
+  en_US.dic.bak_stclean (after the first cleanup pass).
+* Full list of the 272 added links is in new_st_links.txt.
